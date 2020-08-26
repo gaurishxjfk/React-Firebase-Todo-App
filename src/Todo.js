@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState} from 'react';
 import './Todo.css'
 import { List, ListItemText, ListItem, Button , Modal} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
-import db from './firebase'
+import db from './firebase';
+import firebase from 'firebase';
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -20,9 +22,8 @@ function Todo(props) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState();
-    const handleOpen = () => {
-        setOpen(true);
-    };
+    
+    
 
 
     const updateTodo = () => {
@@ -31,6 +32,8 @@ function Todo(props) {
         }, { merge: true})
         setOpen(false);
     }
+   
+
     return (
         <>
         <Modal
@@ -44,11 +47,12 @@ function Todo(props) {
         </Modal>
         <List className="todo__list">       
             <ListItem>
-                <ListItemText primary={props.todo.todo} secondary="time"></ListItemText>
+                <ListItemText primary={props.todo.todo} secondary={props.todo.timestamp}></ListItemText>
             </ListItem>      
            <DeleteForeverRoundedIcon onClick={event => db.collection('todos').doc(props.todo.id).delete()}/>
         </List>
         <Button onClick={e => setOpen(true)}>Edit</Button>
+
         </>
     )
 }
